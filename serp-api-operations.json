@@ -1,0 +1,686 @@
+{
+  "name": "serp-api-operations",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $json.output['1st link'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        -440
+      ],
+      "id": "811c9705-00f0-45cf-929f-1a787fea4769",
+      "name": "1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output['2nd link'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        -260
+      ],
+      "id": "40cdaf2a-863e-4105-93ff-e4c3e99db02f",
+      "name": "2",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output['3rd Link'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        -120
+      ],
+      "id": "122c9fea-e870-4470-b63f-69d74c54668a",
+      "name": "3",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output['4th Link'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        40
+      ],
+      "id": "fbd7b2f1-df9e-4cdd-bd95-3259570651c8",
+      "name": "4",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output['5th Link'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        200
+      ],
+      "id": "885ebc93-2d0e-45bf-94e4-a773af22ea3c",
+      "name": "5",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output['6th Link'] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        360
+      ],
+      "id": "dfad88ae-a893-4ab3-a999-f19c9cd79190",
+      "name": "6",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -880,
+        200
+      ],
+      "id": "e4281911-3b0c-46f3-9d00-3e30fcb568c4",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "a3wGcBeQ7z7AQu1d",
+          "name": "Haroon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "google_images",
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "additionalFields": {
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+          "google_domain": "google.com"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        200
+      ],
+      "id": "a983320d-5331-4bac-8534-e176f4b540bd",
+      "name": "image",
+      "credentials": {
+        "serpApi": {
+          "id": "svQJ6d4qgR8mPGCO",
+          "name": "haroon509"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "timezone": "Asia/Karachi"
+        }
+      },
+      "type": "n8n-nodes-base.dateTimeTool",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        200
+      ],
+      "id": "bd5cfba4-b0ba-4f02-b91e-45a73b0afaef",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=You are an AI agent operating within an n8n workflow. Your primary function is to process user requests related to image searching via SerpApi and providing current date and time information. You have access to two main tools:\n\n1.\nSerpApi (Image Search): This tool allows you to perform Google Image searches. When a user asks for images, you should use this tool. You can specify the search query (what images to look for), and optionally, a location, image size, color, or type if the user provides such details. The output will be a structured list of image results, including original image URLs, thumbnails, titles, and sources.\n\n•\nKey Parameter: query (the search term for images).\n\n•\nOptional Parameters: location, image_size, image_color, image_type (if provided by the user).\n\n• Text Format: When you are writing the text your format should be\n1: Title (Image Link)\n2: Title(Image Link)\n\nAlways remember dont write the link of page just write the link of the images.\n\n2.\nDate & Time Tool: This tool provides current date and time information. Use this when the user explicitly asks for the current date, time, or both.\n\nInstructions for Interaction:\n\n•\nUnderstand User Intent: Carefully analyze the user's request to determine if they are asking for images, date/time, or both.\n\n•\nImage Search Requests: If the user asks for images, formulate a precise search query for SerpApi. If they provide additional filters (like \"large images of cats\"), incorporate those into the SerpApi parameters.\n\n•\nDate & Time Requests: If the user asks for date or time, use the Date & Time tool to retrieve the information.\n\n•\nCombine Information: If a request involves both (e.g., \"Show me images of today's news\"), you might need to use both tools sequentially or combine their outputs logically.\n\n•\nOutput Format: Present the results clearly and concisely. For image searches, list the image titles and their original URLs. For date/time, state the current date and time in a readable format.\n\n•\nClarification: If a request is ambiguous, ask for clarification (e.g., \"What kind of images are you looking for?\").\n\nExample Scenarios:\n\n•\nUser Input: \"Find me pictures of red cars.\"\n\n•\nYour Action: Use SerpApi with query='red cars'.\n\n•\nExpected Output: A list of image titles and URLs for red cars.\n\n\n\n•\nUser Input: \"What is the current time?\"\n\n•\nYour Action: Use the Date & Time tool.\n\n•\nExpected Output: The current date and time.\n\n\n\n•\nUser Input: \"Show me large images of dogs from New York.\"\n\n•\nYour Action: Use SerpApi with query='dogs', location='New York', image_size='large'.\n\n•\nExpected Output: A list of large dog images from New York with titles and URLs.\n\n\n\nRemember to be helpful and provide relevant information based on the tools at your disposal.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        -60
+      ],
+      "id": "5b234ed1-5f61-4119-8b30-86175e0ec92f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "1st link",
+              "description": "From this text extract first link"
+            },
+            {
+              "name": "2nd link",
+              "description": "From this text extract second link"
+            },
+            {
+              "name": "3rd Link",
+              "description": "From this text extract third link"
+            },
+            {
+              "name": "4th Link",
+              "description": "From this text extract fourth link"
+            },
+            {
+              "name": "5th Link",
+              "description": "From this text extract 5th link"
+            },
+            {
+              "name": "6th Link",
+              "description": "If there is sixth link in that text then From this text extract sixth link"
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly Extract the links from the text number wise\nlike in first attribute put the first link \nin second attribute put second link from the text.\nImp: When extract the link from the text be careful don't do mistake in links characters put them same\nImp: When extract the link check twice that you should only extract the link not the square brackets or not any text just links. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        -60
+      ],
+      "id": "d913d2a9-b8f8-4e1b-b5b5-5a7139b13e98",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -440,
+        160
+      ],
+      "id": "6c58f811-5b95-4e94-956d-06e35186163f",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "a3wGcBeQ7z7AQu1d",
+          "name": "Haroon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "640755849125671",
+        "recipientPhoneNumber": "923137412941",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        940,
+        -440
+      ],
+      "id": "171d5c42-43d0-497b-a555-e119c2e5849f",
+      "name": "Send message",
+      "webhookId": "35c254d4-777f-417a-9e75-addbb06425e9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WNGZaY3BcaERym1P",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "640755849125671",
+        "recipientPhoneNumber": "923137412941",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -260
+      ],
+      "id": "5fa1ab24-7d8e-4755-8514-e821a26b9a03",
+      "name": "Send message1",
+      "webhookId": "35c254d4-777f-417a-9e75-addbb06425e9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WNGZaY3BcaERym1P",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "640755849125671",
+        "recipientPhoneNumber": "923137412941",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -120
+      ],
+      "id": "789cb3d4-ddc9-44b1-ad3c-0bf91b86e215",
+      "name": "Send message2",
+      "webhookId": "35c254d4-777f-417a-9e75-addbb06425e9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WNGZaY3BcaERym1P",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "640755849125671",
+        "recipientPhoneNumber": "923137412941",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        780,
+        40
+      ],
+      "id": "b876d289-f159-4130-9e50-e102fe6b53d8",
+      "name": "Send message3",
+      "webhookId": "35c254d4-777f-417a-9e75-addbb06425e9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WNGZaY3BcaERym1P",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "640755849125671",
+        "recipientPhoneNumber": "923137412941",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        980,
+        200
+      ],
+      "id": "891d9e28-d221-4ac4-84e4-9422fe5a1bd2",
+      "name": "Send message4",
+      "webhookId": "35c254d4-777f-417a-9e75-addbb06425e9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WNGZaY3BcaERym1P",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "640755849125671",
+        "recipientPhoneNumber": "923137412941",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        800,
+        360
+      ],
+      "id": "8799b9dc-24e1-4bda-baaa-2d28fe33a5ae",
+      "name": "Send message5",
+      "webhookId": "35c254d4-777f-417a-9e75-addbb06425e9",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "WNGZaY3BcaERym1P",
+          "name": "WhatsApp account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        -60
+      ],
+      "id": "5f80bba8-010a-4f86-8f43-c361f74f065c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -40
+      ],
+      "id": "8c4a1b47-1107-41fe-902b-3b64da1a997c",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "1": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2": {
+      "main": [
+        [
+          {
+            "node": "Send message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3": {
+      "main": [
+        [
+          {
+            "node": "Send message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4": {
+      "main": [
+        [
+          {
+            "node": "Send message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5": {
+      "main": [
+        [
+          {
+            "node": "Send message4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6": {
+      "main": [
+        [
+          {
+            "node": "Send message5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "86b88359-fa8e-482d-b0c0-98e1597a87f8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2473e5e8e0562168754ad686f0d485588c89ee171788e2e9e4aba1f52e8b5db0"
+  },
+  "id": "v62YtJxaIUceZjA4",
+  "tags": []
+}
